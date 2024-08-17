@@ -1,0 +1,42 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapi
+  labels:
+    app: product-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      service: webapi
+  template:
+    metadata:
+      labels:
+        app: product-app
+        service: webapi
+    spec:
+      containers:
+        - name: webapicontainer
+          image: usman565/ecommerceapi:v1
+          # imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://+:80 #force container to listen on 80 port
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapiservice
+  labels:
+    app: product-app
+    service: webapi
+spec:
+  ports:
+    - port: 8080
+      targetPort : 80 #2. talk to pods containers
+      protocol: TCP
+  selector:
+    service: webapi #1. this is important
