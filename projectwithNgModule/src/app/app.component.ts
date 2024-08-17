@@ -69,4 +69,4 @@ export class AppComponent {
   }
 }
 
-export const DOTNET_BASE_API: string = 'https://localhost:7016';
+export const DOTNET_BASE_API: string = '';

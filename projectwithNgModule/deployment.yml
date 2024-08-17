@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp
+  labels:
+    app: product-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      service: webapp
+  template:
+    metadata:
+      labels:
+        app: product-app
+        service: webapp
+    spec:
+      containers:
+        - name: webappcontainer
+          image: ecommercefrontend:v1
+          # imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          env:
+            - name: API_LINK
+              value: http://webapiservice
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webappservice
+  labels:
+    app: product-app
+    service: webapp
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      targetPort : 80
+      protocol: TCP
+  selector:
+    service: webapp
